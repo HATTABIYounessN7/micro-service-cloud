@@ -1,0 +1,81 @@
+<div class="d-flex align-items-center mb-4 gap-2">
+  <a routerLink="/bills" class="btn btn-outline-secondary btn-sm">
+    <i class="bi bi-arrow-left"></i>
+  </a>
+  <h2 class="mb-0">Bill Detail</h2>
+</div>
+
+<div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+<div *ngIf="loading" class="text-center py-5">
+  <div class="spinner-border text-primary" role="status"></div>
+</div>
+
+<div *ngIf="!loading && bill" class="row g-4">
+  <!-- Bill Header -->
+  <div class="col-md-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-header bg-dark text-white fw-bold">
+        <i class="bi bi-info-circle me-2"></i>Bill Info
+      </div>
+      <div class="card-body">
+        <p class="mb-2">
+          <span class="text-muted">Bill #</span>
+          <span class="fw-bold ms-2">{{ bill.id }}</span>
+        </p>
+        <p class="mb-2">
+          <span class="text-muted">Date</span>
+          <span class="ms-2">{{ bill.billingDate | date: 'longDate' }}</span>
+        </p>
+        <hr />
+        <p class="mb-1 text-muted small">Customer</p>
+        <p class="fw-bold mb-0" *ngIf="bill.customer">
+          <i class="bi bi-person-circle me-1"></i>{{ bill.customer.name }}
+        </p>
+        <p class="mb-0" *ngIf="bill.customer">
+          <i class="bi bi-envelope me-1 text-muted"></i>
+          <small>{{ bill.customer.email }}</small>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Items -->
+  <div class="col-md-8">
+    <div class="card shadow-sm">
+      <div class="card-header bg-dark text-white fw-bold">
+        <i class="bi bi-cart3 me-2"></i>Items ({{ bill.productItems.length }})
+      </div>
+      <div class="card-body p-0">
+        <table class="table mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Product</th>
+              <th class="text-center">Qty</th>
+              <th class="text-end">Unit Price</th>
+              <th class="text-end">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of bill.productItems">
+              <td class="fw-semibold">
+                {{ item.product?.name ?? 'Product #' + item.productId }}
+              </td>
+              <td class="text-center">{{ item.quantity }}</td>
+              <td class="text-end">{{ item.unitPrice | number: '1.2-2' }} MAD</td>
+              <td class="text-end fw-semibold">
+                {{ item.unitPrice * item.quantity | number: '1.2-2' }} MAD
+              </td>
+            </tr>
+          </tbody>
+          <tfoot class="table-light">
+            <tr>
+              <th colspan="3" class="text-end">Total</th>
+              <th class="text-end text-success fs-5">{{ getTotal() | number: '1.2-2' }} MAD</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
